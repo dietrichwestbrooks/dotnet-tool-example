@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Monaco.Tool": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "applicationUrl": "https://localhost:9001;http://localhost:9000",
+      "commandLineArgs": "install Monaco.Tool.Emdi 0.1.0 --source https://www.myget.org/F/atiget/api/v3/index.json",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

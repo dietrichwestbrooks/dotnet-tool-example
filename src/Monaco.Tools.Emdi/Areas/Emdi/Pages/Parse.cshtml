@@ -1,0 +1,253 @@
+﻿@page
+@model Monaco.Tools.Areas.Emdi.Pages.ParseModel
+
+@section Styles {
+    <link rel="stylesheet" href="~/lib/datatables/dist/datatables.css"/>
+    <link rel="stylesheet" href="~/lib/prism/dist/prism.css"/>
+}
+
+<div class="container">
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1>EMDI Report</h1>
+                <p class="lead">Generated on @Model.ParseDate</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3>Messages</h3></div>
+                <div class="panel-body">
+                    <div>
+                        <div class="form-check my-2">
+                            <input class="form-check-input" type="checkbox" checked value="1" id="showHeartbeats">
+                            <label class="form-check-label" for="showHeartbeats">
+                                Show heartbeat commands
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-check my-2">
+                            <input class="form-check-input" type="checkbox" value="1" id="showOnlyErrors">
+                            <label class="form-check-label" for="showOnlyErrors">
+                                Show errors only
+                            </label>
+                        </div>
+                    </div>
+                    <table id="messages" class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Date/Time</th>
+                                <th>Port</th>
+                                <th>Session</th>
+                                <th>Type</th>
+                                <th>Class</th>
+                                <th>Command</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th>Date/Time</th>
+                                <th>Port</th>
+                                <th>Session</th>
+                                <th>Type</th>
+                                <th>Class</th>
+                                <th>Command</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/lib.js"></script>
+
+    <script type="text/javascript">
+        function copyToClipboard(data) {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val(data).select();
+            document.execCommand("copy");
+            $temp.remove();
+        }
+
+        /* Formatting function for row details - modify as you need */
+        var format = function(d) {
+            // `d` is the original data object for the row
+            return '<pre class="pre-scrollable" style="width:110px;overflow-x:hidden;text-overflow:ellipsis;white-space:nowrap">' +
+                '   <code class="language-markup" style="white-space:pre-wrap">' + d.xml +  "</code>" +
+                "</pre>";
+        };
+
+        /* Custom filtering function which will search data in column four between two values */
+        $.fn.dataTable.ext.search.push(
+            function(settings, data, dataIndex) {
+                // console.log(data);
+                //console.log({
+                //    command: data[6],
+                //    error: +data[9],
+                //    showHeartbeats: $('#showHeartbeats').prop('checked'),
+                //    isHeartbeat: data[6].startsWith('heartbeat'),
+                //    showOnlyErrors: $('#showOnlyErrors').prop('checked'),
+                //    isError: data[9] === 0,
+                //    show: ($('#showHeartbeats').prop('checked') === true || !data[6].startsWith('heartbeat')) &&
+                //        ($('#showOnlyErrors').prop('checked') === false || +data[9] !== 0)
+                //});
+                return ($("#showHeartbeats").prop("checked") === true || !data[6].startsWith("heartbeat")) &&
+                    ($("#showOnlyErrors").prop("checked") === false || +data[9] !== 0);
+            }
+        );
+
+        $(document).ready(function() {
+            var table = $("#messages").DataTable({
+                pagingType: "full_numbers",
+                pageLength: 100,
+                "columnDefs": [
+                    {
+                        render: function(data, type, row) {
+                            return moment(data).format("YYYY-MM-DD hh:mm:ss.SSS");
+                        },
+                        targets: 1
+                    },
+                    {
+                        render: function(data, type, row) {
+                            if (data.error === 1) {
+                                return '<span class="badge badge-danger">Not Allowed</span>';
+                            }
+                            if (data.error === 2) {
+                                return '<span class="badge badge-danger">Invalid XML</span>';
+                            }
+                            if (data.error === 3) {
+                                return '<span class="badge badge-danger">No Session</span>';
+                            }
+                            if (data.error === 4) {
+                                return '<span class="badge badge-danger">Pending</span>';
+                            }
+                            if (data.error === 5) {
+                                return '<span class="badge badge-danger">Order</span>';
+                            }
+                            if (data.error === 6) {
+                                return '<span class="badge badge-danger">Expired</span>';
+                            }
+                            if (data.error === 201) {
+                                return '<span class="badge badge-danger">Invalid Event</span>';
+                            }
+                            if (data.error === 301) {
+                                return '<span class="badge badge-danger">Invalid Meter</span>';
+                            }
+                            if (data.error === 402) {
+                                return '<span class="badge badge-danger">Not Open</span>';
+                            }
+                            if (data.error === 403) {
+                                return '<span class="badge badge-danger">Not Permitted</span>';
+                            } else {
+                                return '<span class="badge badge-success">OK</span>';
+                            }
+                        },
+                        targets: 7
+                    },
+                    {
+                        targets: [9],
+                        visible: false
+                    }
+                ],
+                "columns": [
+                    {
+                        "className": "details-control",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": ""
+                    },
+                    { "data": "timestamp" },
+                    { "data": "port" },
+                    { "data": "session" },
+                    { "data": "commandType" },
+                    { "data": "class" },
+                    { "data": "command" },
+                    {
+                        "className": "status-control",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": ""
+                    },
+                    {
+                        "className": "",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent":
+                            '<span role="button" style="cursor:pointer" data-toggle="tooltip" data-placement="top" title="Copy XML"><i class="fas fa-copy"></i></span> '
+                    },
+                    { "data": "error" },
+                ],
+                "order": [[1, "desc", 2, "asc", 3, "desc"]]
+            });
+
+            var rows = [];
+
+            messages.forEach(item => {
+                rows.push({
+                    timestamp: item.timestamp,
+                    port: item.port,
+                    session: item.session,
+                    commandType: item.commandType,
+                    class: item.class,
+                    command: item.command,
+                    xml: item.xml,
+                    error: item.error
+                });
+            });
+
+            table.rows.add(rows).draw();
+
+            // Add event listener for opening and closing details
+            $("#messages tbody").on("click",
+                "td.details-control",
+                function() {
+                    var tr = $(this).closest("tr");
+                    var row = table.row(tr);
+
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass("shown");
+                    } else {
+                        // Open this row
+                        row.child(format(row.data())).show();
+                        tr.addClass("shown");
+                        var code = row.child().find("code");
+                        Prism.highlightElement(code[0]);
+                    }
+                });
+
+            $("#messages tbody").on("click",
+                "td.copy-control",
+                function() {
+                    var tr = $(this).closest("tr");
+                    var row = table.row(tr);
+                    var xml = $("<textarea/>").html(row.data().xml).text()
+                    copyToClipboard(xml);
+                });
+
+            $("#showHeartbeats").change(function() {
+                table.draw();
+            });
+
+            $("#showOnlyErrors").change(function() {
+                table.draw();
+            });
+        });
+    </script>
+}

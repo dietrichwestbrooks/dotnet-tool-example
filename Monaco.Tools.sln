@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monaco.Tools.Global", "src\Monaco.Tools.Global\Monaco.Tools.Global.csproj", "{EF2A5EB9-7BAD-43C5-8F80-452741DF6CD4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monaco.Tools.Global.Tests", "src\Monaco.Tools.Global.Tests\Monaco.Tools.Global.Tests.csproj", "{7010910F-A937-4F86-8CA9-42DD1F846A7B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{9200468B-D418-44C8-9146-2346D14BCFE7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{34EAE567-31DA-40A4-B296-9557C5939948}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monaco.Tools.Emdi", "src\Monaco.Tools.Emdi\Monaco.Tools.Emdi.csproj", "{7C3FE36B-8C9E-40ED-BE2F-D8635237ACB1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monaco.Tools.Emdi.Tests", "src\Monaco.Tools.Emdi.Tests\Monaco.Tools.Emdi.Tests.csproj", "{A9E9036B-E927-4AF8-862C-E9DBA6A6F4DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{4544B151-79D2-4114-B92E-C7E676F71A2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monaco.Tools.Common", "src\Monaco.Tools.Common\Monaco.Tools.Common.csproj", "{153D6C16-8327-492E-963F-BC27FB4AED71}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EF2A5EB9-7BAD-43C5-8F80-452741DF6CD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF2A5EB9-7BAD-43C5-8F80-452741DF6CD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF2A5EB9-7BAD-43C5-8F80-452741DF6CD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF2A5EB9-7BAD-43C5-8F80-452741DF6CD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7010910F-A937-4F86-8CA9-42DD1F846A7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7010910F-A937-4F86-8CA9-42DD1F846A7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7010910F-A937-4F86-8CA9-42DD1F846A7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7010910F-A937-4F86-8CA9-42DD1F846A7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9200468B-D418-44C8-9146-2346D14BCFE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9200468B-D418-44C8-9146-2346D14BCFE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C3FE36B-8C9E-40ED-BE2F-D8635237ACB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C3FE36B-8C9E-40ED-BE2F-D8635237ACB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C3FE36B-8C9E-40ED-BE2F-D8635237ACB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C3FE36B-8C9E-40ED-BE2F-D8635237ACB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9E9036B-E927-4AF8-862C-E9DBA6A6F4DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9E9036B-E927-4AF8-862C-E9DBA6A6F4DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9E9036B-E927-4AF8-862C-E9DBA6A6F4DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9E9036B-E927-4AF8-862C-E9DBA6A6F4DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{153D6C16-8327-492E-963F-BC27FB4AED71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{153D6C16-8327-492E-963F-BC27FB4AED71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{153D6C16-8327-492E-963F-BC27FB4AED71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{153D6C16-8327-492E-963F-BC27FB4AED71}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7010910F-A937-4F86-8CA9-42DD1F846A7B} = {34EAE567-31DA-40A4-B296-9557C5939948}
+		{7C3FE36B-8C9E-40ED-BE2F-D8635237ACB1} = {4544B151-79D2-4114-B92E-C7E676F71A2A}
+		{A9E9036B-E927-4AF8-862C-E9DBA6A6F4DA} = {34EAE567-31DA-40A4-B296-9557C5939948}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FFAA5C63-CC49-4793-9E8C-ED95073CC8FF}
+	EndGlobalSection
+EndGlobal
