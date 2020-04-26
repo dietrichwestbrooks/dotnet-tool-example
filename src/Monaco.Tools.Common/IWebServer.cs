@@ -3,8 +3,8 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public interface IToolApplication
+    public interface IWebServer
     {
-        Task StartWebServer(CancellationToken cancellationToken = default);
+        Task Start(CancellationToken cancellationToken = default);
     }
 }

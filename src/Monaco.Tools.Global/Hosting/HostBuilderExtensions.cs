@@ -3,36 +3,22 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using McMaster.Extensions.CommandLineUtils;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
 
     public static class HostBuilderExtensions
     {
-        public static async Task<int> RunCommandLineApplication(
+        public static async Task<int> RunApplication<TRunner>(
             this IHostBuilder builder,
-            string[] args,
-            Action<CommandLineApplication> configure,
+            Action<IServiceCollection> configureServices,
             CancellationToken cancellation = default)
+            where TRunner : IApplicationRunner
         {
-            var hostContext = new ApplicationContext(args);
-
-            var app = new CommandLineApplication(PhysicalConsole.Singleton, Environment.CurrentDirectory);
-
-            configure(app);
-
-            builder.ConfigureServices((context, services) =>
-            {
-                services.AddSingleton(app);
-
-                services.AddSingleton(hostContext);
-
-                services.AddSingleton<IApplicationHost, ApplicationHost>();
-            });
+            builder.ConfigureServices((context, services) => configureServices(services));
 
             var host = builder.Build();
 
-            return await host.Services.GetRequiredService<IApplicationHost>().Run(cancellation);
+            return await host.Services.GetRequiredService<TRunner>().Run(cancellation);
         }
     }
 }

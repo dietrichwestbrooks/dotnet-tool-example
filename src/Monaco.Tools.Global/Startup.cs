@@ -28,7 +28,10 @@
             // var builder = services.AddControllersWithViews()
 
             var builder = services.AddRazorPages()
-                .AddPlugins<IToolPlugin>(plugin => plugin.ConfigureServices(services));
+                .AddPlugins<IToolPlugin>(types =>
+                {
+
+                });
 
             // services.AddLocalization(options => options.ResourcesPath = "Resources");
 
@@ -57,7 +60,7 @@
                 // options.AddLocalization();
             });
 
-            services.AddSingleton<IApplicationHost, ApplicationHost>();
+            services.AddSingleton<IWebServer, WebServer>();
             services.AddSingleton<IToolInstaller, ToolInstaller>();
         }
 

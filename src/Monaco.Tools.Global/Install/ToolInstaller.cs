@@ -2,9 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Web;
+    using Common;
     using Hosting;
     using Microsoft.Extensions.Logging;
     using NuGet.Common;
@@ -21,19 +24,28 @@
 
         private readonly ILogger<ToolInstaller> _logger;
         private readonly ApplicationContext _context;
-        private readonly IApplicationHost _host;
+        private readonly IWebServer _webServer;
 
-        public ToolInstaller(ILogger<ToolInstaller> logger, ApplicationContext context, IApplicationHost host)
+        public ToolInstaller(ILogger<ToolInstaller> logger, ApplicationContext context, IWebServer webServer)
         {
             _logger = logger;
             _context = context;
-            _host = host;
+            _webServer = webServer;
         }
 
         public async Task Install(string name, string version, string source,
             CancellationToken cancellationToken = default)
         {
-            await _host.StartWebServer(cancellationToken);
+            var task = _webServer.Start(cancellationToken);
+
+            var path = "C:\\Aristocrat\\Testing\\ALC\\VLT-13909\\Platform_Info\\logs";
+
+            Process.Start(
+                new ProcessStartInfo(
+                        $"http://localhost:9000/emdi/parse?path={HttpUtility.UrlEncode(path)}")
+                    { UseShellExecute = true });
+
+            await task;
             return;
 
             var settings = Settings.LoadDefaultSettings(root: _context.WorkingDirectory);

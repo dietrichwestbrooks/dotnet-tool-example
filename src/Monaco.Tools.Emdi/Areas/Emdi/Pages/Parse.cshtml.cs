@@ -19,10 +19,10 @@
             _parser = parser;
         }
 
-        public void OnGet()
+        public void OnGet(string path)
         {
             ParseDate = DateTime.UtcNow;
-            Logs = _parser.Parse("").Result;
+            Logs = _parser.Parse(path).Result;
         }
     }
 }

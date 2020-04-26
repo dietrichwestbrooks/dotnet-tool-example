@@ -8,18 +8,18 @@
 
     public static class MvcBuilderExtensions
     {
-        public static IMvcBuilder AddPlugins<TPlugin>(this IMvcBuilder builder, Action<TPlugin> configurator = null)
+        public static IMvcBuilder AddPlugins<TPlugin>(this IMvcBuilder builder, Action<Type> configurator = null)
             where TPlugin : class
         {
             var assemblyFile =
-                @"C:\Aristocrat\Projects\Monaco.Tool\src\Monaco.Tool.Emdi\bin\Debug\netcoreapp3.1\Monaco.Tool.Emdi.dll";
+                @"C:\Aristocrat\Projects\monaco-tools\src\Monaco.Tools.Emdi\bin\Debug\netcoreapp3.1\emdi.dll";
 
-            // builder.AddPluginFromAssemblyFile(@"C:\Aristocrat\Projects\Monaco.Tool\src\Monaco.Tool.Emdi\bin\Debug\netcoreapp3.1\Monaco.Tool.Emdi.dll");
+            // builder.AddPluginFromAssemblyFile(@"C:\Aristocrat\Projects\Monaco.Tool\src\Monaco.Tool.Emdi\bin\Debug\netcoreapp3.1\emdi.dll");
             
-            return builder.AddPlugin(assemblyFile, configurator);
+            return builder.AddPlugin<TPlugin>(assemblyFile, configurator);
         }
 
-        public static IMvcBuilder AddPlugin<TPlugin>(this IMvcBuilder builder, string assemblyFile, Action<TPlugin> configurator = null)
+        public static IMvcBuilder AddPlugin<TPlugin>(this IMvcBuilder builder, string assemblyFile, Action<Type> configurator = null)
             where TPlugin : class
         {
             var plugin = PluginLoader.CreateFromAssemblyFile(
@@ -27,19 +27,25 @@
                 config =>
                     config.PreferSharedTypes = true);
 
-            return builder.AddPlugin(plugin, configurator);
+            return builder.AddPlugin<TPlugin>(plugin, configurator);
         }
 
-        public static IMvcBuilder AddPlugin<TPlugin>(this IMvcBuilder builder, PluginLoader pluginLoader, Action<TPlugin> configurator = null)
+        public static IMvcBuilder AddPlugin<TPlugin>(this IMvcBuilder builder, PluginLoader pluginLoader, Action<Type> configurator = null)
             where TPlugin : class
         {
             var pluginAssembly = pluginLoader.LoadDefaultAssembly();
 
             foreach (var type in pluginAssembly.GetTypes().Where(x => typeof(TPlugin).IsAssignableFrom(x)))
             {
-                var plugin = (TPlugin)Activator.CreateInstance(type);
-                configurator?.Invoke(plugin);
-                builder.Services.AddSingleton(plugin);
+                var bootstrap = type
+                    .GetMethods(BindingFlags.Static | BindingFlags.Public)
+                    .FirstOrDefault(x => x.Name == "ConfigureServices");
+
+                bootstrap?.Invoke(null, new object[] {builder.Services});
+
+                builder.Services.AddSingleton(typeof(TPlugin),type);
+
+                configurator?.Invoke(type);
             }
 
             // This loads MVC application parts from plugin assemblies

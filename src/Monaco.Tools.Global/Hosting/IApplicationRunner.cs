@@ -2,9 +2,8 @@
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Common;
 
-    internal interface IApplicationHost : IToolApplication
+    public interface IApplicationRunner
     {
         Task<int> Run(CancellationToken cancellationToken = default);
     }

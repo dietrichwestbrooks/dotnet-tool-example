@@ -13,8 +13,6 @@
 
         string GetDirectory();
 
-        void ConfigureServices(IServiceCollection services);
-
         void ConfigureOptions(CommandLineApplication app);
     }
 }

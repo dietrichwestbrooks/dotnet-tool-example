@@ -2,13 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>emdi</AssemblyName>
     <RootNamespace>Monaco.Tools</RootNamespace>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <IsPackable>True</IsPackable>
+    <StaticWebAssetBasePath Condition="$(StaticWebAssetBasePath) == ''">/emdi</StaticWebAssetBasePath>
   </PropertyGroup>
 
   <PropertyGroup>
+    <PackageId>Monaco.Tools.Emdi</PackageId>
     <RepositoryUrl>https://github.com/dietrichataristocrat/monaco-tools</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPackable>True</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

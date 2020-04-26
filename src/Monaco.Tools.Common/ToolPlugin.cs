@@ -26,10 +26,6 @@
             return directory;
         }
 
-        public virtual void ConfigureServices(IServiceCollection services)
-        {
-        }
-
         public virtual void ConfigureOptions(CommandLineApplication app)
         {
         }

@@ -1,6 +1,5 @@
 ﻿namespace Monaco.Tools.Hosting
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
@@ -10,21 +9,19 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
 
-    internal class ApplicationHost : IApplicationHost
+    internal class ApplicationRunner : IApplicationRunner
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IHost _host;
         private readonly ApplicationContext _context;
+        private readonly IHost _host;
         private readonly IEnumerable<IToolPlugin> _plugins;
         private readonly CommandLineApplication _app;
 
-        public ApplicationHost(
-            IServiceProvider serviceProvider, 
-            CommandLineApplication app, 
+        public ApplicationRunner(
             IHost host,
-            ApplicationContext context, IEnumerable<IToolPlugin> plugins)
+            CommandLineApplication app,
+            ApplicationContext context,
+            IEnumerable<IToolPlugin> plugins)
         {
-            _serviceProvider = serviceProvider;
             _host = host;
             _context = context;
             _plugins = plugins;
@@ -35,9 +32,9 @@
         {
             _app.Conventions
                 .UseDefaultConventions()
-                .UseConstructorInjection(_serviceProvider);
+                .UseConstructorInjection(_host.Services);
 
-            foreach (var convention in _serviceProvider.GetServices<IConvention>())
+            foreach (var convention in _host.Services.GetServices<IConvention>())
             {
                 _app.Conventions.AddConvention(convention);
             }
@@ -48,11 +45,6 @@
             }
 
             return await _app.ExecuteAsync(_context.Arguments, cancellationToken);
-        }
-
-        public async Task StartWebServer(CancellationToken cancellationToken = new CancellationToken())
-        {
-            await _host.RunAsync(cancellationToken);
         }
     }
 }

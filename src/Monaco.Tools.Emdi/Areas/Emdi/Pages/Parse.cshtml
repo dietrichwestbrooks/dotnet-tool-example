@@ -1,9 +1,14 @@
 ﻿@page
 @model Monaco.Tools.Areas.Emdi.Pages.ParseModel
 
+@{
+    Layout = "_Layout";
+}
+
 @section Styles {
-    <link rel="stylesheet" href="~/lib/datatables/dist/datatables.css"/>
-    <link rel="stylesheet" href="~/lib/prism/dist/prism.css"/>
+    <link rel="stylesheet" href="~/_content/emdi/css/lib.min.css" />
+    <link rel="stylesheet" href="~/_content/emdi/lib/datatables/dist/datatables.min.css" />
+    <link rel="stylesheet" href="~/_content/emdi/lib/prism/dist/prism.min.css" />
 }
 
 <div class="container">
@@ -73,9 +78,12 @@
 
 
 @section Scripts {
-    <script src="~/js/lib.js"></script>
+    <script src="~/_content/emdi/lib/datatables/dist/datatables.min.js"></script>
+    <script src="~/_content/emdi/lib/prism/dist/prism.min.js"></script>
+    <script src="~/_content/emdi/js/lib.min.js"></script>
 
     <script type="text/javascript">
+        var messages = @Json.Serialize(Model.Logs.SelectMany(x => x.Messages));
         function copyToClipboard(data) {
             var $temp = $("<input>");
             $("body").append($temp);
@@ -85,16 +93,16 @@
         }
 
         /* Formatting function for row details - modify as you need */
-        var format = function(d) {
+        var format = function (d) {
             // `d` is the original data object for the row
-            return '<pre class="pre-scrollable" style="width:110px;overflow-x:hidden;text-overflow:ellipsis;white-space:nowrap">' +
-                '   <code class="language-markup" style="white-space:pre-wrap">' + d.xml +  "</code>" +
+            return '<pre class="pre-scrollable" style="width:1065px;overflow-x:hidden;text-overflow:ellipsis;white-space:nowrap">' +
+                '   <code class="language-markup" style="white-space:pre-wrap">' + d.xml + "</code>" +
                 "</pre>";
         };
 
         /* Custom filtering function which will search data in column four between two values */
         $.fn.dataTable.ext.search.push(
-            function(settings, data, dataIndex) {
+            function (settings, data, dataIndex) {
                 // console.log(data);
                 //console.log({
                 //    command: data[6],
@@ -111,19 +119,19 @@
             }
         );
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             var table = $("#messages").DataTable({
                 pagingType: "full_numbers",
                 pageLength: 100,
                 "columnDefs": [
                     {
-                        render: function(data, type, row) {
+                        render: function (data, type, row) {
                             return moment(data).format("YYYY-MM-DD hh:mm:ss.SSS");
                         },
                         targets: 1
                     },
                     {
-                        render: function(data, type, row) {
+                        render: function (data, type, row) {
                             if (data.error === 1) {
                                 return '<span class="badge badge-danger">Not Allowed</span>';
                             }
@@ -215,7 +223,7 @@
             // Add event listener for opening and closing details
             $("#messages tbody").on("click",
                 "td.details-control",
-                function() {
+                function () {
                     var tr = $(this).closest("tr");
                     var row = table.row(tr);
 
@@ -234,18 +242,18 @@
 
             $("#messages tbody").on("click",
                 "td.copy-control",
-                function() {
+                function () {
                     var tr = $(this).closest("tr");
                     var row = table.row(tr);
                     var xml = $("<textarea/>").html(row.data().xml).text()
                     copyToClipboard(xml);
                 });
 
-            $("#showHeartbeats").change(function() {
+            $("#showHeartbeats").change(function () {
                 table.draw();
             });
 
-            $("#showOnlyErrors").change(function() {
+            $("#showOnlyErrors").change(function () {
                 table.draw();
             });
         });

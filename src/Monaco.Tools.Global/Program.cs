@@ -1,10 +1,13 @@
 ﻿namespace Monaco.Tools
 {
+    using System;
     using System.Threading.Tasks;
+    using Common;
     using Hosting;
     using Install;
     using McMaster.Extensions.CommandLineUtils;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Serilog;
 
@@ -20,24 +23,34 @@
 
             Log.Information("Welcome to Monaco Dev Tools!");
 
+            var app = new CommandLineApplication(PhysicalConsole.Singleton, Environment.CurrentDirectory)
+            {
+                Name = "Monaco Tool", Description = "Monaco development tools."
+            };
+
+            app.HelpOption();
+
+            // app.VersionOption("0.0.0");
+
+            app.Commands.Add(new CommandLineApplication<InstallCommand>());
+
+            app.OnExecute(() =>
+            {
+                Log.Error("Specify a command");
+                app.ShowHelp();
+            });
+
             var builder = CreateHostBuilder(args);
 
-            return await builder.RunCommandLineApplication(args, app =>
+            return await builder.RunApplication<IApplicationRunner>(services =>
             {
-                app.Name = "Monaco Tool";
-                app.Description = "Monaco development tools.";
+                var context = new ApplicationContext(args);
 
-                app.HelpOption();
+                services.AddSingleton(app);
 
-                // app.VersionOption("0.0.0");
+                services.AddSingleton(context);
 
-                app.Commands.Add(new CommandLineApplication<InstallCommand>());
-
-                app.OnExecute(() =>
-                {
-                    Log.Error("Specify a command");
-                    app.ShowHelp();
-                });
+                services.AddSingleton<IApplicationRunner, ApplicationRunner>();
             });
         }
 
